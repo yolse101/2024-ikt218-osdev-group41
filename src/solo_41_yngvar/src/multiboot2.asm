@@ -37,7 +37,8 @@ _start:
 	push ebx
 	push eax
 
-    call main ; Jump main function
+    call main ; Jump main function to initialize GDT and IDT
+    hlt
 
 section .bss
 stack_bottom:

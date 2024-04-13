@@ -1,6 +1,7 @@
 #include "libc/stdint.h"
 #include "libc/stddef.h"
 #include "libc/stdbool.h"
+#include "libc/gdt.h"
 #include <multiboot2.h>
 
 
@@ -15,8 +16,7 @@ int kernel_main();
 
 
 int main(uint32_t magic, struct multiboot_info* mb_info_addr) {
-
-
-    // Call cpp kernel_main (defined in kernel.cpp)
+    // Initiate GDT
+    init_gdt();
     return kernel_main();
 }
