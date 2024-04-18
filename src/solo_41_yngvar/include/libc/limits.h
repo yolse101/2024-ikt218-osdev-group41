@@ -1,4 +1,4 @@
 #pragma once
 
-#define INT_MAX 2147483647
+#define INT_MAX 2147483647 // Avoiding overflow errors
 

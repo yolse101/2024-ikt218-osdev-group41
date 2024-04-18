@@ -62,7 +62,15 @@ add_executable(uiaos-kernel
     src/kernel.c
 	src/kernel.cpp
 	src/gdt.c
-)
+	src/print.c
+	src/putchar.c
+	src/idt.c
+	src/interrupt.asm
+	src/isr.c
+	src/util.c
+	src/ports.c
+	src/keyboard.c
+)	
 
 # Include directories for the kernel target
 target_include_directories(uiaos-kernel PUBLIC include)

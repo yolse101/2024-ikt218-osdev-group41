@@ -1,5 +1,16 @@
 #pragma once
 
-int putchar(int ic);
-bool print(const char* data, size_t length);
-int printf(const char* __restrict__ format, ...);
+// Avoid name mangling when called from kernel.cpp
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Simple putchar function for use in print()
+void putchar(char c);
+
+// Simple print function for printing text strings and memory addresses to terminal
+void print(const char* str, ...);
+
+#ifdef __cplusplus
+}
+#endif
