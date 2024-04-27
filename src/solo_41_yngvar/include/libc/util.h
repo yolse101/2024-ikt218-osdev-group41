@@ -2,11 +2,7 @@
 
 #include "libc/stdint.h"
 
-// Copy between memory locations
-void mem_copy(char *source, char *dest, int nbytes);
-
-// Set memory values
-void mem_set(uint8_t *dest, uint8_t val, uint32_t len);
-
-// Convert int to ASCII
-void int_to_ascii(int n, char str[]);
+void int_to_ascii(int n, char str[]); // Convert int to ASCII
+void reverse(char s[]); // Helper function to reverse string
+int strlen(char s[]); // Helper function to calculate string length
+void panic(const char *message); // Panic functionm for error handling

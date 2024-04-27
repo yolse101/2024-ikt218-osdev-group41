@@ -28,64 +28,83 @@ void address_to_string(uintptr_t address, char* buffer) {
     buffer[sizeof(uintptr_t) * 2] = '\0';
 }
 
-// Simple print function for printing text strings and memory addresses to terminal
-void print(const char* format, ...) {
+// Function to convert integer to string for decimal and hexadecimal
+void itoa(unsigned int value, char* str, int base) {
+    char* ptr = str;
+    char* ptr1 = str;
+    char tmp_char;
+    int tmp_value;
 
-    // Initialize variable arguments
+    do {
+        tmp_value = value;
+        value /= base;
+        *ptr++ = "0123456789abcdef"[tmp_value - value * base];
+    } while (value);
+
+    // Apply negative sign for base 10
+    if (tmp_value < 0 && base == 10) *ptr++ = '-';
+    *ptr-- = '\0';
+    while (ptr1 < ptr) {
+        tmp_char = *ptr;
+        *ptr-- = *ptr1;
+        *ptr1++ = tmp_char;
+    }
+}
+
+// Print function
+void print(const char* format, ...) {
     va_list args;
     va_start(args, format);
 
-    // Iterate over the format string
     for (int i = 0; format[i] != '\0'; i++) {
-        // Check for format specifier
         if (format[i] == '%') {
-            // Skip to next character after '%'
             i++;
-
-            // Format is a memory address
-            if (format[i] == 'p') {
-
-                // Retrieve next argument from list
-                uintptr_t address = va_arg(args, uintptr_t);
-
-                // Buffer to hold string
-                char addressStr[sizeof(uintptr_t) * 2 + 1];
-
-                // Convert address to string
-                address_to_string(address, addressStr);
-
-                // Print address char by char
-                putchar('0'); // For correct memory address format
-                putchar('x'); // This too
-
-                // Print each address char using putchar()
-                for (int j = 0; addressStr[j] != '\0'; j++) {
-                    putchar(addressStr[j]);
-                }
-                
-                // Add newline after printing
-                putchar('\n');
-            
-            // Format is a string
-            } else if (format[i] == 'f') {
-
-                // Print each string char using putchar()
-                const char* str = va_arg(args, const char*);
-                while (*str) {
-                    putchar(*str++);
-                }
-                
-                // Add newline after printing
-                putchar('\n');
+            switch (format[i]) {
+                case 's': { // String
+                    const char* str = va_arg(args, const char*);
+                    while (*str) {
+                        putchar(*str++);
+                    }
+                } break;
+                case 'd': { // Decimal integer
+                    int num = va_arg(args, int);
+                    char numStr[12]; // Buffer to hold the integer string (including negative sign)
+                    itoa(num, numStr, 10);
+                    for (char* p = numStr; *p != '\0'; p++) {
+                        putchar(*p);
+                    }
+                } break;
+                case 'x': { // Hexadecimal integer
+                    unsigned int num = va_arg(args, unsigned int);
+                    char numStr[9]; // Buffer to hold the hexadecimal string
+                    itoa(num, numStr, 16);
+                    //putchar('0');
+                    //putchar('x');
+                    for (char* p = numStr; *p != '\0'; p++) {
+                        putchar(*p);
+                    }
+                } break;
+                case 'p': { // Pointer - handle as hexadecimal
+                    void* ptr = va_arg(args, void*);
+                    char ptrStr[19]; // Buffer to hold the pointer string
+                    itoa((uintptr_t)ptr, ptrStr, 16);
+                    putchar('0');
+                    putchar('x');
+                    for (char* p = ptrStr; *p != '\0'; p++) {
+                        putchar(*p);
+                    }
+                } break;
+                default: {
+                    // Handle unexpected format specifier
+                    putchar('%');
+                    putchar(format[i]);
+                } break;
             }
-        
-        // No format specifier found, print current char
         } else {
             putchar(format[i]);
         }
     }
 
-    // Clean up variable arguments
     va_end(args);
 }
 

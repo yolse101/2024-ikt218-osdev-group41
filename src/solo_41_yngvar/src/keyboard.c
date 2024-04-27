@@ -8,11 +8,6 @@ void init_keyboard(void) {
     register_interrupt_handler(IRQ1, keyboard_isr);
 }
 
-// Print output from keyboard port
-static void keyboard_isr() {
-    output_keypress(port_byte_in(0x60));
-}
-
 // Output key press
 void output_keypress(uint8_t scancode) {
     // Create key map
@@ -23,8 +18,13 @@ void output_keypress(uint8_t scancode) {
     int keyMapSize = sizeof(keyMap) / sizeof(char*); // Define size of map
 
     if (scancode < keyMapSize) { // Scancode is within map
-        print(keyMap[scancode]); // Print pressed key
+        print("%s", keyMap[scancode]); // Print pressed key
     } else if (scancode <= 0x7f) { // Scancode is outside map
-        print("Unknown key"); // Print error message
+        print("%s", "Unknown key"); // Print error message
     }
+}
+
+// Print output from keyboard port
+void keyboard_isr() {
+    output_keypress(port_byte_in(0x60));
 }

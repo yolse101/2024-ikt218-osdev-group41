@@ -4,6 +4,7 @@
 #include "libc/stdio.h"
 #include "libc/stdint.h"
 #include "libc/keyboard.h"
+#include "libc/ports.h"
 
 // Array to store interrupt handlers
 isr_t interrupt_handlers[256];
