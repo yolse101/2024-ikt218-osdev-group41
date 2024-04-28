@@ -5,6 +5,7 @@
 #include "libc/stdint.h"
 #include "libc/keyboard.h"
 #include "libc/ports.h"
+#include "libc/stddef.h"
 
 // Array to store interrupt handlers
 isr_t interrupt_handlers[256];
@@ -125,15 +126,17 @@ void isr_handler(registers_t r) {
     print("\n");
 }
 
-// IRQ handler 
 void irq_handler(registers_t r) {
-    if (r.int_no >= 40) port_byte_out(0xA0, 0x20); // Send End Of Interrupt to slave PIC if IRQ 8-15
-    port_byte_out(0x20, 0x20); // Send End Of Interrupt to master PIC if IRQ 0-7
-    // Search for handler
-    if (interrupt_handlers[r.int_no] != 0) {
+    // Check if handler is valid
+    if (interrupt_handlers[r.int_no] != NULL) {
         isr_t handler = interrupt_handlers[r.int_no]; // Retrieve handler
         handler(r); // Call handler with interrupt register
     }
+    // After handling interrupt, send EOI
+    if (r.int_no >= 40) {
+        port_byte_out(0xA0, 0x20); // Send EOI to slave PIC if IRQ 8-15
+    }
+    port_byte_out(0x20, 0x20); // Always send EOI to master PIC
 }
 
 // Register interrupt handler in interrupt handler array

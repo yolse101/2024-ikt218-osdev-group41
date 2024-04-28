@@ -17,9 +17,9 @@ extern "C" {
 #define PIT_DEFAULT_DIVISOR 0x4E20 // 20000, which gives about 18.2 Hz (1193180 / 20000)
 
 // IRQ0 related macros
-#define PIC1_CMD_PORT 0x20
-#define PIC1_DATA_PORT 0x20
-#define PIC_EOI	0x20 // End-of-interrupt command code
+#define PIC1_CMD_PORT 0x20  // Command port for master PIC
+#define PIC1_DATA_PORT 0x21  // Data port for master PIC
+#define PIC_EOI 0x20         // End-of-interrupt command code
  
 // Custom sleep function constants
 #define PIT_BASE_FREQUENCY 1193180

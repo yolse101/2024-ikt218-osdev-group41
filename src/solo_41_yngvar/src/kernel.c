@@ -56,7 +56,7 @@ int main(uint32_t magic, struct multiboot_info* mb_info_addr) {
     print("Pausing 10 seconds to let you read...\n");
 
     int i = 0;
-    while(i < 1800000000){
+    while(i < 180000000){
     i++;        
     }
 

@@ -5,10 +5,10 @@
 #include "libc/stdio.h"
 
 // Number of timer ticks since system start
-uint32_t tick = 0;
+volatile uint32_t tick = 0;
 
 // Callback function for PIT interrupts
-static void pit_callback(registers_t regs) {
+void pit_callback() {
     tick++;  // Increment tick counter on each PIT interrupt
 }
 
@@ -17,7 +17,7 @@ void init_pit(uint32_t freq) {
     // Register PIT callback function as handler for IRQ0
     register_interrupt_handler(IRQ0, pit_callback);
     // Calculate divisor for given frequency
-    uint32_t divisor = 1193180 / freq; // 1193180 Hz is PIT base frequency
+    uint16_t divisor = 1193180 / freq; // 1193180 Hz is PIT base frequency
     uint8_t low  = (uint8_t)(divisor & 0xFF);  // Extract low byte of divisor
     uint8_t high = (uint8_t)((divisor >> 8) & 0xFF);  // Extract high byte of divisor
     // Configure PIT to repeat given frequency
@@ -25,6 +25,7 @@ void init_pit(uint32_t freq) {
     port_byte_out(0x40, low);  // Send low byte of divisor to channel 0
     port_byte_out(0x40, high); // Send high byte of divisor to channel 0
 }
+
 
 // Get current system tick count
 uint32_t get_current_tick() {
@@ -48,7 +49,7 @@ void sleep_interrupt(uint32_t milliseconds) {
     uint32_t current_tick = get_current_tick();  // Get current tick count
     uint32_t ticks_to_wait = milliseconds * TICKS_PER_MS;  // Calculate number of ticks to wait
     uint32_t end_ticks = current_tick + ticks_to_wait;  // Calculate end tick count
-    while (current_tick < end_ticks) {  // Loop until current tick count is less than end tick count
+    while (current_tick < end_ticks) {  // Loop until current tick count is no longer less than end tick count
         __asm__ __volatile__("sti");  // Assembly instruction to enable interrupts
         __asm__ __volatile__("hlt");  // Assembly instruction to halt the CPU until the next interrupt
         current_tick = get_current_tick();  // Update current tick count after waking up from halt
