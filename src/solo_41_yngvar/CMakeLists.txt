@@ -12,7 +12,7 @@ set(CMAKE_CXX_COMPILER_WORKS 1)
 cmake_minimum_required(VERSION 3.22.1)
 
 # Project name and languages used
-project(UiAOS LANGUAGES C CXX ASM_NASM)
+project(bugzyOS LANGUAGES C CXX ASM_NASM)
 
 # Create a lock file to prevent parallel runs of CMake
 file(LOCK ${CMAKE_SOURCE_DIR} DIRECTORY GUARD FILE)
@@ -26,7 +26,7 @@ include(FetchContent)
 # UiAOS: Variables
 ########################################
 set(OS_ARCH_TARGET "i386")  # x86_64 
-set(OS_NAME "UiA Operating System")
+set(OS_NAME "bugzyOS")
 set(OS_KERNEL_NAME "uiaos")
 set(OS_KERNEL_BINARY "kernel.bin")
 set(OS_KERNEL_IMAGE "kernel.iso")
